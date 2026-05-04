@@ -9,7 +9,7 @@ import openpyxl
 from tqdm import tqdm
 
 DB_NAME = "timesheet.db"
-__version__ = "0.1-alpha"
+__version__ = "0.2-alpha"
 
 
 # -----------------------------
@@ -1124,9 +1124,10 @@ def main():
 
     sub = parser.add_subparsers(dest="command")
 
-    cfg = sub.add_parser("config", help="Configure the timesheet directory")
-    cfg.add_argument("directory")
+    cfg = sub.add_parser("config", help="Configure or view configuration")
+    cfg.add_argument("directory", nargs="?", help="Timesheet directory")
     cfg.add_argument("--user", help="User name for timesheets", required=False)
+    cfg.add_argument("--list", action="store_true", help="List current configuration")
 
     rebase_parser = sub.add_parser("rebase", help="Scan configured directory and import changed .xlsx files")
     rebase_parser.add_argument("-full", "--full", action="store_true", help="Clear database and fully rebuild")
@@ -1156,7 +1157,18 @@ def main():
     init_db()
 
     if args.command == "config":
-        set_config(args.directory, args.user)
+        if args.list:
+            directory = get_config("timesheet_dir")
+            user = get_config("user")
+            print("Current Configuration")
+            print("=" * 40)
+            print(f"Directory: {directory or 'NOT SET'}")
+            print(f"User: {user or 'NOT SET'}")
+        else:
+            if not args.directory:
+                print("Error: directory is required unless using --list")
+                return
+            set_config(args.directory, args.user)
     elif args.command == "rebase":
         if not validate_config():
             return
