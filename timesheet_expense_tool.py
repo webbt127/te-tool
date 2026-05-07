@@ -1180,11 +1180,9 @@ def main():
         if not validate_config():
             return
         search(args.term)
-        search(args.term)
     elif args.command == "query":
         if not validate_config():
             return
-        query_mode()
         query_mode()
     elif args.command == "last":
         if not validate_config():
@@ -1192,13 +1190,9 @@ def main():
         show_time = args.t or not args.e
         show_expense = args.e
         last_report(offset=args.offset, show_time=show_time, show_expense=show_expense)
-        show_time = args.t or not args.e
-        show_expense = args.e
-        last_report(offset=args.offset, show_time=show_time, show_expense=show_expense)
     elif args.command == "project_report":
         if not validate_config():
             return
-        project_report(args.job_number, args.verbose)
         project_report(args.job_number, args.verbose)
     else:
         parser.print_help()
